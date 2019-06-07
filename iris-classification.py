@@ -73,7 +73,7 @@ models.append(('KNN', KNeighborsClassifier()))
 models.append(('CART', DecisionTreeClassifier()))
 models.append(('NB', GaussianNB()))
 models.append(('SVM', SVC(gamma='auto')))
-# evaluate each model in turn
+# evaluate each model in turn. using 10-fold cross valiudation (each model is evaluated 10 times)
 results = []
 names = []
 for name, model in models:
@@ -83,3 +83,25 @@ for name, model in models:
 	names.append(name)
 	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
+
+# Create a plot of the model evaluation results, 
+# compare the spread and the mean accuracy of each model.
+fig = plt.figure()
+fig.suptitle('Algorithm Comparison')
+ax = fig.add_subplot(111)
+plt.boxplot(results)
+ax.set_xticklabels(names)
+plt.show()
+
+# Run KNN model directly on the validation set
+# and summarise the results as finalo accuracy score, a confusion matrix and a classification report
+
+# Make predictions on validation dataset
+knn = KNeighborsClassifier()
+knn.fit(X_train, Y_train)
+predictions = knn.predict(X_validation)
+print(accuracy_score(Y_validation, predictions))
+print(confusion_matrix(Y_validation, predictions))
+print(classification_report(Y_validation, predictions))
+
+
